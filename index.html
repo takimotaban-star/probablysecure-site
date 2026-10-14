@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probably Secure™ — たぶん安全なセキュリティ診断</title>
+<meta name="description" content="あなたの安全を、たぶん守ります。業界最高水準（当社比）のセキュリティ診断。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #5b6478;
+    --line: #dde2ee;
+    --brand: #1f5eff;
+    --brand-ink: #ffffff;
+    --ok: #12945a;
+    --warn: #c47a00;
+    --term-bg: #0d1424;
+    --term-text: #8ff0b0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1020;
+      --card: #141b2e;
+      --text: #e6eaf5;
+      --muted: #9aa3ba;
+      --line: #263049;
+      --brand: #5b8cff;
+      --brand-ink: #08101f;
+      --ok: #3ccf8e;
+      --warn: #f0b444;
+      --term-bg: #060a14;
+      --term-text: #7be8a2;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+    line-height: 1.7;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  header { border-bottom: 1px solid var(--line); background: var(--card); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-weight: 800; letter-spacing: .02em; font-size: 1.1rem; }
+  .logo small { font-weight: 500; color: var(--muted); font-size: .7rem; margin-left: .4em; }
+  .status-pill { font-size: .75rem; color: var(--ok); border: 1px solid currentColor; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+
+  .hero { text-align: center; padding: 56px 0 24px; }
+  .hero h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); line-height: 1.35; margin: 0 0 12px; }
+  .hero p { color: var(--muted); margin: 0 0 28px; }
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    background: var(--brand); color: var(--brand-ink);
+    font: inherit; font-weight: 700; font-size: 1.05rem;
+    padding: 14px 28px; border-radius: 12px;
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--brand) 35%, transparent);
+  }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); box-shadow: none; font-size: .95rem; padding: 10px 20px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin: 24px 0; }
+  .hidden { display: none; }
+
+  .bar { height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 8px 0 16px; }
+  .bar > div { height: 100%; width: 0; background: var(--brand); transition: width .25s; }
+  .term {
+    background: var(--term-bg); color: var(--term-text);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: .82rem;
+    border-radius: 10px; padding: 14px; height: 210px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;
+  }
+
+  .verdict { text-align: center; }
+  .verdict .big { font-size: clamp(1.8rem, 6vw, 2.6rem); font-weight: 800; color: var(--ok); margin: 4px 0; }
+  .verdict .conf { color: var(--muted); }
+  .verdict .conf b { color: var(--warn); }
+
+  table { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: .95rem; }
+  td { padding: 9px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { color: var(--muted); width: 44%; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 2px solid var(--ok); color: var(--ok); border-radius: 12px;
+    padding: 8px 14px; font-weight: 800; margin-top: 12px; transform: rotate(-2deg);
+  }
+  .badge span { font-weight: 500; font-size: .75rem; color: var(--muted); display: block; }
+
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .feature { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .feature h3 { margin: 0 0 4px; font-size: 1rem; }
+  .feature p { margin: 0; color: var(--muted); font-size: .9rem; }
+
+  .reviews blockquote { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid var(--line); }
+  .reviews blockquote:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+  .reviews cite { display: block; color: var(--muted); font-size: .85rem; font-style: normal; }
+
+  footer { color: var(--muted); font-size: .78rem; padding: 32px 0 48px; text-align: center; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">🛡️ Probably Secure™<small>since 2026</small></div>
+    <div class="status-pill">● システム稼働中（たぶん）</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>あなたの安全を、<br>たぶん守ります。</h1>
+    <p>業界最高水準（当社比）のセキュリティ診断を、無料で。<br>所要時間：約10秒。根拠：特になし。</p>
+    <button class="btn" id="start">🔍 セキュリティ診断を開始</button>
+  </section>
+
+  <section class="card hidden" id="scan">
+    <strong id="scan-title">診断中…</strong>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="term" id="term"></div>
+  </section>
+
+  <section class="card hidden verdict" id="result">
+    <div>診断結果</div>
+    <div class="big">たぶん安全です ✅</div>
+    <div class="conf">信頼度：<b id="conf">62</b>%</div>
+    <table id="details"></table>
+    <div class="badge">🏅 Probably Secure Certified™<span id="cert-no"></span></div>
+    <p style="margin-top:22px"><button class="btn ghost" id="again">もう一度診断する（結果は変わりません）</button></p>
+  </section>
+
+  <section>
+    <h2>Probably Secure™ が選ばれる理由</h2>
+    <div class="features">
+      <div class="feature"><h3>🔐 たぶん暗号化</h3><p>通信はHTTPSで暗号化されています。これは本当です。</p></div>
+      <div class="feature"><h3>🧠 AI非搭載</h3><p>最新のAIは使っていません。勘で判定しています。</p></div>
+      <div class="feature"><h3>⚡ 超高速診断</h3><p>何も調べていないので、とても速いです。</p></div>
+      <div class="feature"><h3>🌏 24時間365日</h3><p>サーバーが止まっていなければ、いつでも診断できます。</p></div>
+    </div>
+  </section>
+
+  <section class="card reviews">
+    <h2 style="margin-top:0">お客様の声</h2>
+    <blockquote>「診断したら安全と出ました。何が安全なのかは分かりません。」<cite>— 匿名希望（会社員）</cite></blockquote>
+    <blockquote>「3回診断しましたが、3回とも“たぶん”でした。一貫性があって安心です。」<cite>— 自宅サーバー管理人</cite></blockquote>
+    <blockquote>「信頼度62%という数字に、逆に誠実さを感じました。」<cite>— 通りすがりのエンジニア</cite></blockquote>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Probably Secure™ ／ お問い合わせ：<a href="mailto:unsafe@probablysecure.fyi">unsafe@probablysecure.fyi</a></p>
+  <p>※ 本診断は安全を保証するものではありません。本診断は何も調べていません。<br>
+  ※ このページはジョークサイトです。入力欄はなく、あなたの情報は一切送信・保存していません（これは本当です）。</p>
+</footer>
+
+<script>
+  const checks = [
+    "ファイアウォールの存在を確認中…",
+    "パスワードの強さを雰囲気で推定中…",
+    "量子暗号への耐性を検証中…",
+    "なんとなく嫌な予感がしないか確認中…",
+    "ブラウザのやる気を測定中…",
+    "ハッカーがいないか窓の外を確認中…",
+    "Wi-Fiの機嫌を確認中…",
+    "SSL証明書を確認中…（これは本物）",
+    "セキュリティっぽい単語を並べています…",
+    "結果をそれっぽく整えています…",
+  ];
+
+  function guessBrowser() {
+    const ua = navigator.userAgent;
+    if (/Edg\//.test(ua)) return "Edge";
+    if (/Firefox\//.test(ua)) return "Firefox";
+    if (/Chrome\//.test(ua)) return "Chrome";
+    if (/Safari\//.test(ua)) return "Safari";
+    return "なにかのブラウザ";
+  }
+  function guessOS() {
+    const ua = navigator.userAgent;
+    if (/Android/.test(ua)) return "Android";
+    if (/iPhone|iPad/.test(ua)) return "iOS";
+    if (/Windows/.test(ua)) return "Windows";
+    if (/Mac OS X/.test(ua)) return "macOS";
+    if (/Linux/.test(ua)) return "Linux";
+    return "なにかのOS";
+  }
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const $ = (id) => document.getElementById(id);
+  const startBtn = $("start"), scan = $("scan"), result = $("result"),
+        term = $("term"), bar = $("bar");
+
+  async function runScan() {
+    startBtn.disabled = true;
+    result.classList.add("hidden");
+    scan.classList.remove("hidden");
+    term.textContent = "";
+    bar.style.width = "0";
+    scan.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    const log = (s) => { term.textContent += s + "\n"; term.scrollTop = term.scrollHeight; };
+    log(`> probably-secure scan --target "${guessOS()} / ${guessBrowser()}"`);
+    for (let i = 0; i < checks.length; i++) {
+      log(checks[i]);
+      await sleep(500 + Math.random() * 700);
+      log("  → " + pick(["OK（たぶん）", "問題なし（見てない）", "異常なし（気がする）", "PASS"]));
+      bar.style.width = ((i + 1) / checks.length * 100) + "%";
+    }
+    log("> 診断完了。お疲れさまでした。");
+    await sleep(600);
+
+    $("conf").textContent = 51 + Math.floor(Math.random() * 24);
+    $("cert-no").textContent = "認証番号 PS-" + Math.floor(1000 + Math.random() * 9000) + "（毎回変わります）";
+    const rows = [
+      ["お使いの環境", `${guessOS()} / ${guessBrowser()}（たぶん）`],
+      ["パスワード", "たぶん強い"],
+      ["ファイアウォール", "たぶんある"],
+      ["ウイルス", "見当たらない（探していない）"],
+      ["量子コンピュータ耐性", "知らん"],
+      ["SSL証明書", "本物（ここだけガチ）"],
+      ["総合評価", "たぶん安全"],
+    ];
+    $("details").innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+
+    scan.classList.add("hidden");
+    result.classList.remove("hidden");
+    result.scrollIntoView({ behavior: "smooth", block: "center" });
+    startBtn.disabled = false;
+  }
+
+  startBtn.addEventListener("click", runScan);
+  $("again").addEventListener("click", runScan);
+</script>
+</body>
+</html>
